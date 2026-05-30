@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -50,5 +49,22 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Page<Product> searchProducts(String keyword, Pageable pageable) {
         return productRepository.findByNameContaining(keyword, pageable);
+    }
+
+    @Transactional
+    public Product updateProduct(Long id, ProductDto dto) {
+        // 기존 엔티티 조회 (없으면 예외)
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다: " + id));
+
+        // 영속 상태 엔티티 필드 변경
+        // → @Transactional 종료 시 더티 체킹으로 자동 UPDATE
+        product.setName(dto.getName());
+        product.setPrice(dto.getPrice());
+        product.setStock(dto.getStock());
+        if (dto.getDescription() != null) {
+            product.setDescription(dto.getDescription());
+        }
+        return product; // save() 불필요 — 더티 체킹으로 자동 저장
     }
 }
