@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="stampFooter"
+     style="margin-top: 40px; padding: 12px; border-top: 1px solid #ccc; font-size: 0.85em; color: #555; text-align: center;">
+    학번: 2071265 &nbsp;|&nbsp; 성명: 김정훈 &nbsp;|&nbsp;
+    실습 수행:
+    <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+</div>
+</body>
+</html>
